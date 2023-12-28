@@ -16,6 +16,7 @@ class Sprite {
     this.lastKeyPressed;
     this.color = color;
     this.isAttacking;
+    this.health = 100;
     this.attackBox = {
       offset,
       position: {
@@ -145,13 +146,17 @@ function animate() {
     PlayerAttacking({ player1: player, player2: enemy }) &&
     player.isAttacking
   ) {
-    console.log("player attacked");
+    player.isAttacking = false;
+    enemy.health -= 20;
+    document.querySelector("#enemyBar").style.width = enemy.health + "%";
   }
   if (
     PlayerAttacking({ player1: enemy, player2: player }) &&
     enemy.isAttacking
   ) {
-    console.log("enemy attacked");
+    enemy.isAttacking = false;
+    player.health -= 20;
+    document.querySelector("#playerBar").style.width = player.health + "%";
   }
 }
 animate();

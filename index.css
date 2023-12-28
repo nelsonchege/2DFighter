@@ -2,4 +2,33 @@ body,
 :root {
   margin: 0;
   overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.healthBar {
+  position: absolute;
+  display: inline-block;
+  width: 99.2%;
+  color: aqua;
+  margin-top: 40px;
+}
+
+.healthbarContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.playersBar {
+  width: 40%;
+  height: 60px;
+  position: relative;
+}
+
+.timerBox {
+  width: 130px;
+  height: 130px;
+  background-color: red;
 }
