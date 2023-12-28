@@ -117,6 +117,33 @@ function PlayerAttacking({ player1, player2 }) {
   );
 }
 
+function determineWinners({ player, enemy, timerId }) {
+  clearTimeout(timerId);
+  document.querySelector("#gameMessage").style.display = "flex";
+  if (player.health === enemy.health) {
+    document.querySelector("#gameMessage").innerHTML = "Tie";
+  } else if (player.health > enemy.health) {
+    document.querySelector("#gameMessage").innerHTML = "Player 1 wins";
+  } else if (player.health < enemy.health) {
+    document.querySelector("#gameMessage").innerHTML = "PLayer 2 wins";
+  }
+}
+
+let Timer = 20;
+let timerId;
+function decreaseTimer() {
+  if (Timer > 0) {
+    timerId = setTimeout(decreaseTimer, 1000);
+    Timer--;
+    document.querySelector("#timer").innerHTML = Timer;
+  }
+
+  if (Timer === 0) {
+    determineWinners({ player, enemy, timerId });
+  }
+}
+decreaseTimer();
+
 function animate() {
   window.requestAnimationFrame(animate);
   ctx.fillStyle = "black";
@@ -157,6 +184,11 @@ function animate() {
     enemy.isAttacking = false;
     player.health -= 20;
     document.querySelector("#playerBar").style.width = player.health + "%";
+  }
+
+  // handle end of fight
+  if (enemy.health <= 0 || player.health <= 0) {
+    determineWinners({ player, enemy, timerId });
   }
 }
 animate();

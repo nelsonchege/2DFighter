@@ -10,7 +10,6 @@ body,
   position: absolute;
   display: inline-block;
   width: 99.2%;
-  color: aqua;
   margin-top: 40px;
 }
 
@@ -31,4 +30,23 @@ body,
   width: 130px;
   height: 130px;
   background-color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4rem;
+  font-weight: bold;
+}
+
+.gameMessage {
+  position: absolute;
+  color: aliceblue;
+  display: none;
+  justify-content: center;
+  margin-top: 20rem;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 2rem;
+  font-weight: bold;
 }
