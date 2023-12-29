@@ -7,7 +7,14 @@ canvas.height = window.innerHeight;
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 class Sprite {
-  constructor({ position, imageSrc, width, height, Frames = 1 }) {
+  constructor({
+    position,
+    imageSrc,
+    width,
+    height,
+    Frames = 1,
+    offset = { x: 0, y: 0 },
+  }) {
     this.position = position;
     this.width = width;
     this.height = height;
@@ -17,6 +24,7 @@ class Sprite {
     this.currentFrame = 0;
     this.frameElapsed = 0;
     this.frameHold = 4;
+    this.offset = offset;
   }
 
   draw() {
@@ -26,15 +34,13 @@ class Sprite {
       0,
       this.image.width / this.Frames,
       this.image.height,
-      this.position.x,
-      this.position.y,
+      this.position.x - this.offset.x,
+      this.position.y - this.offset.y,
       this.width,
       this.height
     );
   }
-
-  update() {
-    this.draw();
+  animateFrames() {
     this.frameElapsed++;
 
     if (this.frameElapsed % this.frameHold === 0) {
@@ -45,19 +51,36 @@ class Sprite {
       }
     }
   }
+
+  update() {
+    this.draw();
+    this.animateFrames();
+  }
 }
 
 const gravity = 0.5;
-class Fighter {
-  constructor({ position, velocity, color = "red", offset }) {
-    this.position = position;
+class Fighter extends Sprite {
+  constructor({
+    position,
+    velocity,
+    color = "red",
+    offset,
+    imageSrc,
+    Frames = 1,
+    width = 50,
+    height = 150,
+  }) {
+    super({ position, imageSrc, Frames, offset });
     this.velocity = velocity;
-    this.height = 150;
-    this.width = 50;
+    this.height = height;
+    this.width = width;
     this.lastKeyPressed;
     this.color = color;
     this.isAttacking;
     this.health = 100;
+    this.currentFrame = 0;
+    this.frameElapsed = 0;
+    this.frameHold = 4;
     this.attackBox = {
       offset,
       position: {
@@ -68,23 +91,19 @@ class Fighter {
       height: 50,
     };
   }
-  draw() {
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
-
-    if (this.isAttacking) {
-      ctx.fillStyle = "green";
-      ctx.fillRect(
-        this.attackBox.position.x,
-        this.attackBox.position.y,
-        this.attackBox.width,
-        this.attackBox.height
-      );
-    }
-  }
 
   update() {
     this.draw();
+
+    this.frameElapsed++;
+
+    if (this.frameElapsed % this.frameHold === 0) {
+      if (this.currentFrame < this.Frames - 1) {
+        this.currentFrame++;
+      } else {
+        this.currentFrame = 0;
+      }
+    }
 
     this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
     this.attackBox.position.y = this.position.y;
@@ -94,7 +113,7 @@ class Fighter {
 
     if (
       this.position.y + this.height + this.velocity.y >=
-      canvas.height - 150
+      canvas.height + 200
     ) {
       this.velocity.y = 0;
     } else {
@@ -125,12 +144,16 @@ const shop = new Sprite({
 });
 
 const player = new Fighter({
-  position: { x: 0, y: 0 },
+  position: { x: 100, y: 0 },
   velocity: { x: 0, y: 5 },
   offset: {
-    x: 0,
+    x: 215,
     y: 0,
   },
+  imageSrc: "./img/kanji/Idle.png",
+  Frames: 8,
+  height: 900,
+  width: 900,
 });
 
 const enemy = new Fighter({
@@ -210,7 +233,7 @@ function animate() {
   background.update();
   shop.update();
   player.update();
-  enemy.update();
+  //   enemy.update();
 
   player.velocity.x = 0;
   enemy.velocity.x = 0;
