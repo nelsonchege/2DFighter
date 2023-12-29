@@ -6,8 +6,32 @@ canvas.height = window.innerHeight;
 
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-const gravity = 0.5;
 class Sprite {
+  constructor({ position, imageSrc }) {
+    this.position = position;
+    this.width = canvas.width;
+    this.height = canvas.height;
+    this.image = new Image();
+    this.image.src = imageSrc;
+  }
+
+  draw() {
+    ctx.drawImage(
+      this.image,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
+  }
+
+  update() {
+    this.draw();
+  }
+}
+
+const gravity = 0.5;
+class Fighter {
   constructor({ position, velocity, color = "red", offset }) {
     this.position = position;
     this.velocity = velocity;
@@ -51,7 +75,10 @@ class Sprite {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
-    if (this.position.y + this.height + this.velocity.y >= canvas.height) {
+    if (
+      this.position.y + this.height + this.velocity.y >=
+      canvas.height - 150
+    ) {
       this.velocity.y = 0;
     } else {
       this.velocity.y += gravity;
@@ -66,7 +93,12 @@ class Sprite {
   }
 }
 
-const player = new Sprite({
+const background = new Sprite({
+  position: { x: 0, y: 0 },
+  imageSrc: "./img/background.png",
+});
+
+const player = new Fighter({
   position: { x: 0, y: 0 },
   velocity: { x: 0, y: 5 },
   offset: {
@@ -75,7 +107,7 @@ const player = new Sprite({
   },
 });
 
-const enemy = new Sprite({
+const enemy = new Fighter({
   position: { x: 400, y: 0 },
   velocity: { x: 0, y: 5 },
   color: "blue",
@@ -148,6 +180,8 @@ function animate() {
   window.requestAnimationFrame(animate);
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  background.update();
   player.update();
   enemy.update();
 
