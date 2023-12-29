@@ -248,7 +248,37 @@ const enemy = new Fighter({
   color: "blue",
   offset: {
     x: -100,
-    y: 0,
+    y: 69,
+  },
+  imageSrc: "./img/samurai_kai/Idle.png",
+  Frames: 4,
+  height: 800,
+  width: 900,
+  sprites: {
+    idle: {
+      imageSrc: "./img/samurai_kai/Idle.png",
+      Frames: 4,
+    },
+    run: {
+      imageSrc: "./img/samurai_kai/Run.png",
+      Frames: 8,
+    },
+    jump: {
+      imageSrc: "./img/samurai_kai/Jump.png",
+      Frames: 2,
+    },
+    fall: {
+      imageSrc: "./img/samurai_kai/Fall.png",
+      Frames: 2,
+    },
+    attack1: {
+      imageSrc: "./img/samurai_kai/Attack1.png",
+      Frames: 4,
+    },
+    attack2: {
+      imageSrc: "./img/samurai_kai/Attack2.png",
+      Frames: 4,
+    },
   },
 });
 
@@ -319,7 +349,7 @@ function animate() {
   background.update();
   shop.update();
   player.update();
-  //   enemy.update();
+  enemy.update();
 
   player.velocity.x = 0;
   enemy.velocity.x = 0;
@@ -346,8 +376,18 @@ function animate() {
 
   if (keys.ArrowLeft.pressed && enemy.lastKeyPressed === "ArrowLeft") {
     enemy.velocity.x = -10;
+    enemy.switchSprite("run");
   } else if (keys.ArrowRight.pressed && enemy.lastKeyPressed === "ArrowRight") {
     enemy.velocity.x = 10;
+    enemy.switchSprite("run");
+  } else {
+    enemy.switchSprite("idle");
+  }
+
+  if (enemy.velocity.y < 0) {
+    enemy.switchSprite("jump");
+  } else if (enemy.velocity.y > 0) {
+    enemy.switchSprite("fall");
   }
 
   // handling player attack
