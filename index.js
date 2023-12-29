@@ -7,17 +7,25 @@ canvas.height = window.innerHeight;
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 class Sprite {
-  constructor({ position, imageSrc }) {
+  constructor({ position, imageSrc, width, height, Frames = 1 }) {
     this.position = position;
-    this.width = canvas.width;
-    this.height = canvas.height;
+    this.width = width;
+    this.height = height;
     this.image = new Image();
     this.image.src = imageSrc;
+    this.Frames = Frames;
+    this.currentFrame = 0;
+    this.frameElapsed = 0;
+    this.frameHold = 4;
   }
 
   draw() {
     ctx.drawImage(
       this.image,
+      this.currentFrame * (this.image.width / this.Frames),
+      0,
+      this.image.width / this.Frames,
+      this.image.height,
       this.position.x,
       this.position.y,
       this.width,
@@ -27,6 +35,15 @@ class Sprite {
 
   update() {
     this.draw();
+    this.frameElapsed++;
+
+    if (this.frameElapsed % this.frameHold === 0) {
+      if (this.currentFrame < this.Frames - 1) {
+        this.currentFrame++;
+      } else {
+        this.currentFrame = 0;
+      }
+    }
   }
 }
 
@@ -96,6 +113,15 @@ class Fighter {
 const background = new Sprite({
   position: { x: 0, y: 0 },
   imageSrc: "./img/background.png",
+  width: canvas.width,
+  height: canvas.height,
+});
+const shop = new Sprite({
+  position: { x: 1130, y: 69 },
+  imageSrc: "./img/shop.png",
+  width: 630,
+  height: 700,
+  Frames: 6,
 });
 
 const player = new Fighter({
@@ -182,6 +208,7 @@ function animate() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   background.update();
+  shop.update();
   player.update();
   enemy.update();
 
