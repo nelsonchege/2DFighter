@@ -1,8 +1,8 @@
 const player = new Fighter({
-  position: { x: 100, y: 0 },
+  position: { x: 0, y: 0 },
   velocity: { x: 0, y: 5 },
   offset: {
-    x: 215,
+    x: 0,
     y: 0,
   },
   imageSrc: "./img/kanji/Idle.png",
@@ -30,19 +30,31 @@ const player = new Fighter({
       imageSrc: "./img/kanji/Attack1.png",
       Frames: 6,
     },
-    attack2: {
-      imageSrc: "./img/kanji/Attack2.png",
-      Frames: 6,
+    takeHit: {
+      imageSrc: "./img/kanji/Take hit.png",
+      framesMax: 3,
     },
+    death: {
+      imageSrc: "./img/kanji/Death.png",
+      framesMax: 7,
+    },
+  },
+  attackBox: {
+    offset: {
+      x: 0,
+      y: 0,
+    },
+    width: 160,
+    height: 50,
   },
 });
 
 const enemy = new Fighter({
-  position: { x: 400, y: 0 },
+  position: { x: 0, y: 0 },
   velocity: { x: 0, y: 5 },
   color: "blue",
   offset: {
-    x: -100,
+    x: -500,
     y: 69,
   },
   imageSrc: "./img/samurai_kai/Idle.png",
@@ -74,5 +86,21 @@ const enemy = new Fighter({
       imageSrc: "./img/samurai_kai/Attack2.png",
       Frames: 4,
     },
+    takeHit: {
+      imageSrc: "./img/samurai_kai/Take Hit - white silhouette.png",
+      framesMax: 4,
+    },
+    death: {
+      imageSrc: "./img/samurai_kai/Death.png",
+      framesMax: 6,
+    },
+  },
+  attackBox: {
+    offset: {
+      x: 0,
+      y: 0,
+    },
+    width: 160,
+    height: 50,
   },
 });

@@ -22,6 +22,78 @@ const shop = new Sprite({
 
 decreaseTimer();
 
+function animate() {
+  window.requestAnimationFrame(animate);
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  background.update();
+  shop.update();
+  player.update();
+  enemy.update();
+
+  player.velocity.x = 0;
+  enemy.velocity.x = 0;
+
+  // handles the players movement
+
+  if (keys.a.pressed && player.lastKeyPressed === "a") {
+    player.velocity.x = -10;
+    player.switchSprite("run");
+  } else if (keys.d.pressed && player.lastKeyPressed === "d") {
+    player.velocity.x = 10;
+    player.switchSprite("run");
+  } else {
+    player.switchSprite("idle");
+  }
+
+  // handling players jump
+
+  if (player.velocity.y < 0) {
+    player.switchSprite("jump");
+  } else if (player.velocity.y > 0) {
+    player.switchSprite("fall");
+  }
+
+  if (keys.ArrowLeft.pressed && enemy.lastKeyPressed === "ArrowLeft") {
+    enemy.velocity.x = -10;
+    enemy.switchSprite("run");
+  } else if (keys.ArrowRight.pressed && enemy.lastKeyPressed === "ArrowRight") {
+    enemy.velocity.x = 10;
+    enemy.switchSprite("run");
+  } else {
+    enemy.switchSprite("idle");
+  }
+
+  if (enemy.velocity.y < 0) {
+    enemy.switchSprite("jump");
+  } else if (enemy.velocity.y > 0) {
+    enemy.switchSprite("fall");
+  }
+
+  // handling player attack
+  if (
+    PlayerAttacking({ player1: player, player2: enemy }) &&
+    player.isAttacking
+  ) {
+    player.isAttacking = false;
+    enemy.health -= 20;
+    document.querySelector("#enemyBar").style.width = enemy.health + "%";
+  }
+  if (
+    PlayerAttacking({ player1: enemy, player2: player }) &&
+    enemy.isAttacking
+  ) {
+    enemy.isAttacking = false;
+    player.health -= 20;
+    document.querySelector("#playerBar").style.width = player.health + "%";
+  }
+
+  // handle end of fight
+  if (enemy.health <= 0 || player.health <= 0) {
+    determineWinners({ player, enemy, timerId });
+  }
+}
 animate();
 
 window.addEventListener("keydown", (event) => {
